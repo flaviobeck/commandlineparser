@@ -6,12 +6,8 @@ import java.util.NoSuchElementException;
 import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.INVALID_INTEGER;
 import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.MISSING_INTEGER;
 
-class IntegerArgumentMarshaler implements ArgumentMarshaler {
+class IntegerArgumentMarshaler implements ArgumentMarshaler<Integer> {
     private int intValue = 0;
-
-    static int getValue(ArgumentMarshaler am) {
-        return ((IntegerArgumentMarshaler) am).intValue;
-    }
 
     public void set(Iterator<String> currentArgument) throws ArgsException {
         String parameter = null;
@@ -23,5 +19,9 @@ class IntegerArgumentMarshaler implements ArgumentMarshaler {
         } catch (NumberFormatException e) {
             throw new ArgsException(INVALID_INTEGER, parameter);
         }
+    }
+
+    public Integer get() {
+        return intValue;
     }
 }

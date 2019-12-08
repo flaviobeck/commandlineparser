@@ -6,12 +6,8 @@ import java.util.NoSuchElementException;
 import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.INVALID_DOUBLE;
 import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.MISSING_DOUBLE;
 
-class DoubleArgumentMarshaler implements ArgumentMarshaler {
+class DoubleArgumentMarshaler implements ArgumentMarshaler<Double> {
     private double doubleValue = 0;
-
-    static double getValue(ArgumentMarshaler am) {
-        return ((DoubleArgumentMarshaler) am).doubleValue;
-    }
 
     public void set(Iterator<String> currentArgument) throws ArgsException {
         String parameter = null;
@@ -23,5 +19,9 @@ class DoubleArgumentMarshaler implements ArgumentMarshaler {
         } catch (NumberFormatException e) {
             throw new ArgsException(INVALID_DOUBLE, parameter);
         }
+    }
+
+    public Double get() {
+        return doubleValue;
     }
 }

@@ -4,12 +4,12 @@ import junit.framework.TestCase;
 
 public class ArgsTest extends TestCase {
 
-    public void testCreateWithNoSchemaOrArguments() throws Exception {
+    public void testCreateWithNoSchemaOrArguments() {
         Args args = new Args("", new String[0]);
         assertEquals(0, args.cardinality());
     }
 
-    public void testWithNoSchemaButWithOneArgument() throws Exception {
+    public void testWithNoSchemaButWithOneArgument() {
         try {
             new Args("", new String[]{"-x"});
             fail();
@@ -20,7 +20,7 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testWithNoSchemaButWithMultipleArguments() throws Exception {
+    public void testWithNoSchemaButWithMultipleArguments() {
         try {
             new Args("", new String[]{"-x", "-y"});
             fail();
@@ -31,7 +31,7 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testNonLetterSchema() throws Exception {
+    public void testNonLetterSchema() {
         try {
             new Args("*", new String[]{});
             fail("Args constructor should have thrown exception");
@@ -42,7 +42,7 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testInvalidArgumentFormat() throws Exception {
+    public void testInvalidArgumentFormat() {
         try {
             new Args("f~", new String[]{});
             fail("Args constructor should have throws exception");
@@ -53,20 +53,20 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testSimpleBooleanPresent() throws Exception {
+    public void testSimpleBooleanPresent() {
         Args args = new Args("x", new String[]{"-x"});
         assertEquals(1, args.cardinality());
-        assertEquals(true, args.getBoolean('x'));
+        assertEquals(true, (boolean) args.get('x', Boolean.class));
     }
 
-    public void testSimpleStringPresent() throws Exception {
+    public void testSimpleStringPresent() {
         Args args = new Args("x*", new String[]{"-x", "param"});
         assertEquals(1, args.cardinality());
         assertTrue(args.has('x'));
-        assertEquals("param", args.getString('x'));
+        assertEquals("param", args.get('x', String.class));
     }
 
-    public void testMissingStringArgument() throws Exception {
+    public void testMissingStringArgument() {
         try {
             new Args("x*", new String[]{"-x"});
             fail();
@@ -77,26 +77,26 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testBooleanInSchemaButNotPresent() throws Exception {
+    public void testBooleanInSchemaButNotPresent() {
         Args args = new Args("x,s*", new String[]{"-s", "string"});
-        assertEquals(false, args.getBoolean('x'));
+        assertEquals(false, (boolean) args.get('x', Boolean.class));
     }
 
-    public void testSpacesInFormat() throws Exception {
+    public void testSpacesInFormat() {
         Args args = new Args("x, y", new String[]{"-xy"});
         assertEquals(2, args.cardinality());
         assertTrue(args.has('x'));
         assertTrue(args.has('y'));
     }
 
-    public void testSimpleIntPresent() throws Exception {
+    public void testSimpleIntPresent() {
         Args args = new Args("x#", new String[]{"-x", "42"});
         assertEquals(1, args.cardinality());
         assertTrue(args.has('x'));
-        assertEquals(42, args.getInt('x'));
+        assertEquals(42, (int) args.get('x', Integer.class));
     }
 
-    public void testInvalidInteger() throws Exception {
+    public void testInvalidInteger() {
         try {
             new Args("x#", new String[]{"-x", "Forty two"});
             fail();
@@ -108,7 +108,7 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testMissingInteger() throws Exception {
+    public void testMissingInteger() {
         try {
             new Args("x#", new String[]{"-x"});
             fail();
@@ -119,14 +119,14 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testSimpleDoublePresent() throws Exception {
+    public void testSimpleDoublePresent() {
         Args args = new Args("x##", new String[]{"-x", "42.3"});
         assertEquals(1, args.cardinality());
         assertTrue(args.has('x'));
-        assertEquals(42.3, args.getDouble('x'), .001);
+        assertEquals(42.3, args.get('x', Double.class), .001);
     }
 
-    public void testInvalidDouble() throws Exception {
+    public void testInvalidDouble() {
         try {
             new Args("x##", new String[]{"-x", "Forty two"});
             fail();
@@ -138,7 +138,7 @@ public class ArgsTest extends TestCase {
         }
     }
 
-    public void testMissingDouble() throws Exception {
+    public void testMissingDouble() {
         try {
             new Args("x##", new String[]{"-x"});
             fail();

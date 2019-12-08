@@ -5,12 +5,8 @@ import java.util.NoSuchElementException;
 
 import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.MISSING_STRING;
 
-class StringArgumentMarshaler implements ArgumentMarshaler {
+class StringArgumentMarshaler implements ArgumentMarshaler<String> {
     private String stringValue = "";
-
-    static String getValue(ArgumentMarshaler am) {
-        return ((StringArgumentMarshaler) am).stringValue;
-    }
 
     public void set(Iterator<String> currentArgument) throws ArgsException {
         try {
@@ -18,5 +14,9 @@ class StringArgumentMarshaler implements ArgumentMarshaler {
         } catch (NoSuchElementException e) {
             throw new ArgsException(MISSING_STRING);
         }
+    }
+
+    public String get() {
+        return stringValue;
     }
 }

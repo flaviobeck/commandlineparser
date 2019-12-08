@@ -2,47 +2,24 @@ package br.com.vedoveto.commandlineparser.args;
 
 import java.util.*;
 
-import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.*;
+import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.UNEXPECTED_ARGUMENT;
 
 public class Args {
-    private Map<Character, ArgumentMarshaler> marshalers;
-
-    private Set<Character> argsFound;
+    private final Set<Character> argsFound;
+    private final ArgsSchemaParser schemaParser;
+    private final Map<Character, ArgumentMarshaler> marshalers;
     private ListIterator<String> currentArgument;
 
     public Args(String schema, String[] args) throws ArgsException {
-        marshalers = new HashMap<Character, ArgumentMarshaler>();
         argsFound = new HashSet<Character>();
-        parseSchema(schema);
+        schemaParser = new ArgsSchemaParser();
+
+        marshalers = schemaParser.parseSchema(schema);
         parseArgumentStrings(Arrays.asList(args));
     }
 
-    private void parseSchema(String schema) throws ArgsException {
-        for (String element : schema.split(","))
-            if (element.length() > 0)
-                parseSchemaElement(element.trim());
-    }
-
-    private void parseSchemaElement(String element) throws ArgsException {
-        char elementId = element.charAt(0);
-        String elementTail = element.substring(1);
-        validateSchemaElementId(elementId);
-
-        if (elementTail.length() == 0)
-            marshalers.put(elementId, new BooleanArgumentMarshaler());
-        else if (elementTail.equals("*"))
-            marshalers.put(elementId, new StringArgumentMarshaler());
-        else if (elementTail.equals("#"))
-            marshalers.put(elementId, new IntegerArgumentMarshaler());
-        else if (elementTail.equals("##"))
-            marshalers.put(elementId, new DoubleArgumentMarshaler());
-        else
-            throw new ArgsException(INVALID_ARGUMENT_FORMAT, elementId, elementTail);
-    }
-
-    private void validateSchemaElementId(char elementId) throws ArgsException {
-        if (!Character.isLetter(elementId))
-            throw new ArgsException(INVALID_ARGUMENT_NAME, elementId, null);
+    public <T> T get(char arg, Class<T> argClass) {
+        return (T) marshalers.get(arg).get();
     }
 
     private void parseArgumentStrings(List<String> argsList) throws ArgsException {
@@ -81,21 +58,4 @@ public class Args {
     public boolean has(char arg) {
         return argsFound.contains(arg);
     }
-
-    public boolean getBoolean(char arg) {
-        return BooleanArgumentMarshaler.getValue(marshalers.get(arg));
-    }
-
-    public String getString(char arg) {
-        return StringArgumentMarshaler.getValue(marshalers.get(arg));
-    }
-
-    public int getInt(char arg) {
-        return IntegerArgumentMarshaler.getValue(marshalers.get(arg));
-    }
-
-    public double getDouble(char arg) {
-        return DoubleArgumentMarshaler.getValue(marshalers.get(arg));
-    }
-
 }
