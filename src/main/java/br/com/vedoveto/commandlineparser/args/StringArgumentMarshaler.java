@@ -8,6 +8,7 @@ import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.MIS
 class StringArgumentMarshaler implements ArgumentMarshaler<String> {
     private String stringValue = "";
 
+    @Override
     public void set(Iterator<String> currentArgument) throws ArgsException {
         try {
             stringValue = currentArgument.next();
@@ -16,6 +17,7 @@ class StringArgumentMarshaler implements ArgumentMarshaler<String> {
         }
     }
 
+    @Override
     public String get() {
         return stringValue;
     }

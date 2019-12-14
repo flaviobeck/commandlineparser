@@ -9,6 +9,7 @@ import static br.com.vedoveto.commandlineparser.args.ArgsException.ErrorCode.MIS
 class IntegerArgumentMarshaler implements ArgumentMarshaler<Integer> {
     private int intValue = 0;
 
+    @Override
     public void set(Iterator<String> currentArgument) throws ArgsException {
         String parameter = null;
         try {
@@ -21,6 +22,7 @@ class IntegerArgumentMarshaler implements ArgumentMarshaler<Integer> {
         }
     }
 
+    @Override
     public Integer get() {
         return intValue;
     }
