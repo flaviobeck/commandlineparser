@@ -63,6 +63,7 @@ public class ArgsTest extends TestCase {
         Args args = new Args("x*", new String[]{"-x", "param"});
         assertEquals(1, args.cardinality());
         assertTrue(args.has('x'));
+        assertFalse(args.has('y'));
         assertEquals("param", args.get('x', String.class));
     }
 
